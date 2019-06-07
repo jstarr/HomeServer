@@ -20,6 +20,8 @@ parts/
 sdist/
 var/
 wheels/
+.DS_Store
+.vscode/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -105,3 +107,7 @@ include/
 
 # mypy
 .mypy_cache/
+
+# misc
+homeserver.db
+
