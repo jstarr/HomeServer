@@ -1,5 +1,5 @@
 from flask import Flask
-from .config import DevConfig as Config
+from homeserver.config import DevConfig as Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_restplus import Api
 
