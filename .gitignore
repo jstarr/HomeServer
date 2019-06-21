@@ -110,4 +110,5 @@ include/
 
 # misc
 homeserver.db
+migrations/
 

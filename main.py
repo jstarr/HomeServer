@@ -1,7 +1,7 @@
 """Starting point for our Flask Website"""
 from homeserver import app, api
 # from .homeserver.models import User, Role
-# from .homeserver.models import Vendor, Manufacturer, MicroProcessor
+# from .homeserver.models import Vendor, Manufacturer, Ucontroller
 # from .homeserver.models import Board, Component, RawData
 
 ns = api.namespace('api', description='API for Home based IOT Server')

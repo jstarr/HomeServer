@@ -21,7 +21,7 @@ class User(db.Model):
         fName = f'\t\tName:\t\t{self.name}'
         fEmail = f'\t\tEmail:\t\t{self.email}'
         fRollID = f'\t\tRoll_id:\t{self.roll_id}'
-        fUpd = f'\t\tUpdated:\t{self.updated.strftime("%m/%d/%Y, %H:%M:%S")}'
+        fUpd = f'\t\tUpdated:\t{self.updated}'
         return (fUser + fName + fEmail + fRollID + fUpd)
 
     def get_reset_token(self):
@@ -53,7 +53,7 @@ class Role(db.Model):
         fID = f'\t\tID:\t\t{self.id}'
         fName = f'\t\tName:\t\t{self.name}'
         fDesc = f'\t\tDesc:\t\t{self.desc}'
-        fUpd = f'\t\tUpdated:\t{self.updated.strftime("%m/%d/%Y, %H:%M:%S")}'
+        fUpd = f'\t\tUpdated:\t{self.updated}'
         return(f'Roles:' + fID + fName + fDesc + fUpd)
 
 
@@ -61,12 +61,14 @@ class Vendor(db.Model):
     """Where we bought the component or board."""
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.Text, nullable=False)
-    street = db.Column(db.String(50), nullable=True)
+    street1 = db.Column(db.Text, nullable=True)
+    street2 = db.Column(db.Text, nullable=True)
     city = db.Column(db.String(50), nullable=True)
     state = db.Column(db.String(2), nullable=True)
     zip = db.Column(db.String(10), nullable=True)
     country = db.Column(db.String(24), nullable=True)
     phone = db.Column(db.String(15), nullable=True)
+    url = db.Column(db.Text, nullable=True)
     components = db.relationship('Component', backref='vendor', lazy=True)
     boards = db.relationship('Board', backref='vendor', lazy=True)
     updated = db.Column(db.DateTime, nullable=False, default=datetime.now())
@@ -74,12 +76,14 @@ class Vendor(db.Model):
     def __repr__(self):
         fID = f'\t\tID:\t\t{self.id}'
         fName = f'\t\tName:\t\t{self.name}'
-        fStr = f'\t\tStreet:\t\t{self.street}'
+        fStr = f'\t\tStreet:\t\t{self.street1}'
+        if (self.street2 != ''):
+            fStr += f' Street:\t\t{self.street2}'
         fCity = f'\t\tCity:\t\t{self.city}'
         fSt = f'\t\tState:\t\t{self.state}'
         fZip = f'\t\tZip:\t\t{self.zip}'
         fCoun = f'\t\tCountry:\t\t{self.country}'
-        fUpd = f'\t\tUpdated:\t{self.updated.strftime("%m/%d/%Y, %H:%M:%S")}'
+        fUpd = f'\t\tUpdated:\t{self.updated}'
         return('Vendor:'
                + fID + fName + fStr + fCity + fSt + fZip + fCoun + fUpd
                )
@@ -89,11 +93,13 @@ class Manufacturer(db.Model):
     """A list of manufacturers and their contacts"""
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.Text, nullable=False)
-    street = db.Column(db.String(50), nullable=True)
+    street1 = db.Column(db.Text, nullable=True)
+    street2 = db.Column(db.Text, nullable=True)
     city = db.Column(db.String(50), nullable=True)
     state = db.Column(db.String(2), nullable=True)
     zip = db.Column(db.String(10), nullable=True)
     country = db.Column(db.String(24), nullable=True)
+    url = db.Column(db.Text, nullable=True)
     boards = db.relationship('Board', backref='manufacturer', lazy=True)
     components = db.relationship('Component', backref='manufacturer', lazy=True)
     updated = db.Column(db.DateTime, nullable=False,
@@ -102,40 +108,45 @@ class Manufacturer(db.Model):
     def __repr__(self):
         fID = f'\t\tID:\t\t{self.id}'
         fName = f'\t\tName:\t\t{self.name}'
-        fStr = f'\t\tStreet:\t\t{self.street}'
+        fStr = f'\t\tStreet:\t\t{self.street1}'
+        if self.street2 != '':
+            fStr += f' {self.street2}'
         fCity = f'\t\tCity:\t\t{self.city}'
         fSt = f'\t\tState:\t\t{self.state}'
         fZip = f'\t\tZip:\t\t{self.zip}'
         fCoun = f'\t\tCountry:\t\t{self.country}'
-        fUpd = f'\t\tUpdated:\t{self.updated.strftime("%m/%d/%Y, %H:%M:%S")}'
+        fUpd = f'\t\tUpdated:\t{self.updated}'
         return('Manufacturer:'
                + fID + fName + fStr + fCity + fSt + fZip + fCoun + fUpd
                )
 
 
-class MicroProcessor(db.Model):
+class Ucontroller(db.Model):
     """Type of processor that you might find on a board"""
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
     type = db.Column(db.String(25), nullable=False)
     desc = db.Column(db.Text, nullable=True)
+    #   URL documenting the microcontroller
+    url = db.Column(db.Text, nullable=True)
     updated = db.Column(db.DateTime, nullable=False, default=datetime.now())
-    boards = db.relationship('Board', backref='microprocessor', lazy=True)
+    boards = db.relationship('Board', backref='ucontroller', lazy=True)
 
     def __repr__(self):
+        # sUpd = func.to_char(self.updated, "%m/%d/%Y, %H:%M:%S")
         fID = f'\t\tID:{self.id}'
         fDesc = '\t\tDesc:{self.desc}'
-        fUpd = f'\t\tUpdated:\t{self.updated.strftime("%m/%d/%Y, %H:%M:%S")}'
-        return (f"MicroProcessor: " + fID + fDesc + fUpd)
+        fUpd = f'\t\tUpdated:\t{self.updated}'
+        return (f"Ucontroller: " + fID + fDesc + fUpd)
 
 
 class Board(db.Model):
     """Keep a list of the valid boards with their location."""
-    """A board includes a micro-processor"""
+    """A board includes a Ucontroller (microcontroler)"""
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     desc = db.Column(db.Text, nullable=True)
-    microprocessor_id = db.Column(db.Integer,
-                                  db.ForeignKey('micro_processor.id'))
+    ucontroller_id = db.Column(db.Integer,
+                               db.ForeignKey('ucontroller.id'))
     #   Each board should have its own security value
     secret = db.Column(db.String(64), nullable=False)
     #   Primary location designation.  For the home, "in" or "out" doors
@@ -160,7 +171,7 @@ class Board(db.Model):
                     '-' + self.location
                     + '-' + self.sub_location)
         fbLoc = f'\t\t{location}\t'
-        fUpd = f'\t\tUpdated:\t{self.updated.strftime("%m/%d/%Y, %H:%M:%S")}'
+        fUpd = f'\t\tUpdated:\t{self.updated}'
         return (f"Board:" + fID + fDesc + fbLoc + fUpd)
 
 
@@ -170,6 +181,7 @@ class Component(db.Model):
     component_id = db.Column(db.Integer, primary_key=True, nullable=False)
     component_name = db.Column(db.String(120))
     purpose = db.Column(db.String(120))
+    url = db.Column(db.Text, nullable=True)
     manufacturer_id = db.Column(db.String(64),
                                 db.ForeignKey('manufacturer.id'))
     #   Vendor id where the component was purchased
@@ -197,7 +209,7 @@ class Component(db.Model):
         fTopic = f'\t\tMQTT Topic:\t\t{self.MQTT_topic}'
         fUsage = f'\t\tUsage:\t\t{self.usage}'
         fActive = f'\t\tActive:\t\t{self.active}'
-        fUpd = f'\t\tUpdated:\t{self.updated.strftime("%m/%d/%Y, %H:%M:%S")}'
+        fUpd = f'\t\tUpdated:\t{self.updated}'
         return (
             'Component:' + fID + fName + fPur + fMan + fVen + fPrice +
             fPDate + fPin + fTopic + fUsage + fActive + fUpd
@@ -246,7 +258,7 @@ class RawData(db.Model):
         fNotes = f'\t\tNotes:\t\t{self.note}'
         fBID = f'\t\tBoard ID:\t{self.board_id}'
         fComID = f'\t\tComponent ID:\t{self.component_id}'
-        fUpd = f'\t\tUpdated:\t{self.updated.strftime("%m/%d/%Y, %H:%M:%S")}'
+        fUpd = f'\t\tUpdated:\t{self.updated}'
         return('Data:'
                + fID + fVal + fNotes + fBID + fComID + fUpd
                )
