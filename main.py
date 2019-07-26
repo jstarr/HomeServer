@@ -1,13 +1,11 @@
 """Starting point for our Flask Website"""
-from homeserver import app, api
-# from .homeserver.models import User, Role
-# from .homeserver.models import Vendor, Manufacturer, Ucontroller
-# from .homeserver.models import Board, Component, RawData
+from homeserver.core.utility import debug_print
+from homeserver import create_app
+debug_print(__file__)
+# from homeserver.apis.views import apis
 
-ns = api.namespace('api', description='API for Home based IOT Server')
-
-
-print(__name__)
 if __name__ == 'main':
-    print('-' * 25 + ' ...Starting... ' + '-' * 25)
+    app = create_app()
     app.run(host="0.0.0.0", port=5000, debug=True)
+    # app.register_blueprint(blueprint)
+debug_print(__file__)

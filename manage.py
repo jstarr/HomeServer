@@ -13,6 +13,6 @@ manager.add_command('db', MigrateCommand)
 def make_shell_context():
     return dict(app=app, db=db,
                 User=User, Role=Role,
-                Vender=Vendor, Manufacturer=Manufacturer,
+                Vendor=Vendor, Manufacturer=Manufacturer,
                 Ucontroller=Ucontroller,
                 Board=Board, Component=Component, RawData=RawData)

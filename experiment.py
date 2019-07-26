@@ -1,10 +1,23 @@
-from HomeServer import app, db
-from .models import User, Role
-from .models import Vendor, Manufacturer, Ucontroller
-from .models import Board, Component, RawData
+from flask import Flask, request
+from flask_restplus import Resource, Api
+
+app = Flask(__name__)
+api = Api(app)
+
+todos = {}
 
 
-mpESP32 = Ucontroller(type='ESP32',
-                         desc='ESP32 is a series of low-cost, low-power system on a chip microcontrollers with integrated Wi-Fi and dual-mode Bluetooth.')
-db.session.add(mpESP32)
-db.session.commit()
+@api.route('/<string:todo_id>')
+class TodoSimple(Resource):
+    def get(self, todo_id):
+        if todo_id in todos:
+            return {todo_id: todos[todo_id]}
+        return {'message': 'There is no todo by that id.'}
+
+    def put(self, todo_id):
+        todos[todo_id] = request.form['data']
+        return {todo_id: todos[todo_id]}
+
+
+if __name__ == '__main__':
+    app.run(debug=True)

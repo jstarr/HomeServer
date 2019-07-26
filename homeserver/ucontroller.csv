@@ -1,4 +1,0 @@
-id,type,desc,updated,url
-1,ESP32,"ESP32 is a series of low-cost, low-power system on a chip microcontrollers with integrated Wi-Fi and dual-mode Bluetooth.",2019-06-17 19:01:42.753526,https://www.espressif.com/en/products/hardware/esp32/overview
-2,Arduino,"Arduino is an open-source hardware and software company, project and user community that designs and manufactures single-board microcontrollers and microcontroller kits for building digital devices and interactive objects that can sense and control both physically and digitally.",2019-06-18 09:48:41.748498,https://www.arduino.cc/
-3,ESP8266EX,Espressif’s ESP8266EX delivers highly integrated Wi-Fi SoC solution to meet users,2019-06-18 09:58:03.030852,https://www.espressif.com/en/products/hardware/esp8266ex/overview
