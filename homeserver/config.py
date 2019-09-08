@@ -2,25 +2,28 @@ from homeserver.core.utility import debug_print
 import os
 debug_print(__name__)
 
-#   Initializations from the environment
-env_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI',
-                                  'sqlite:///homeserver.db')
-
 
 class Config(object):
-    SQLALCHEMY_DATABASE_URI = env_DATABASE_URI
+    '''Initializations from the environment'''
+    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI',
+                                    'sqlite:///homeserver.db')
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'super-secret-key'
+    SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get(
+                                    'SQLALCHEMY_TRACK_MODIFICATIONS') or True
+    SWAGGER_UI_JSONEDITOR = os.environ.get('SWAGGER_UI_JSONEDITOR') or True
+    DEBUG = os.environ.get('DEBUG') or True
+    env = os.environ.get('FLASK_ENV', 'prod')
+
+    def __repr__(self):
+        print(
+            f'SQLALCHEMY_DATABASE_URI: {self.SQLALCHEMY_DATABASE_URI}',
+            f'\nSECRET_KEY: {self.SECRET_KEY}',
+            f'\nSQLALCHEMY_TRACK_MODIFICATIONS:',
+            f'{self.SQLALCHEMY_TRACK_MODIFICATIONS}',
+            f'\nSWAGGER_UI_JSONEDITOR: {self.SWAGGER_UI_JSONEDITOR}',
+            f'\nDEBUG: {self.DEBUG}',
+            f'\nenv: {self.env}'
+        )
 
 
-class ProdConfig(object):
-    SQLALCHEMY_DATABASE_URI = env_DATABASE_URI
-
-
-class DevConfig(Config):
-        DEBUG = True
-        SQLALCHEMY_DATABASE_URI = env_DATABASE_URI
-        SQLALCHEMY_TRACK_MODIFICATIONS = True
-        SWAGGER_UI_JSONEDITOR = True
-
-
-myConfig = {'development': DevConfig, 'prod': ProdConfig}
 debug_print(__name__)

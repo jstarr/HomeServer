@@ -1,4 +1,5 @@
-from homeserver import app, db
+from homeserver import app
+from homeserver.apis import db
 from homeserver.models import User, Role
 from homeserver.models import Vendor, Manufacturer, Ucontroller
 from homeserver.models import Board, Component, RawData

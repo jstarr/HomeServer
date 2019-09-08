@@ -7,5 +7,4 @@ debug_print(__file__)
 if __name__ == 'main':
     app = create_app()
     app.run(host="0.0.0.0", port=5000, debug=True)
-    # app.register_blueprint(blueprint)
 debug_print(__file__)

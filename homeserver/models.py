@@ -3,11 +3,10 @@
 from homeserver.core.utility import debug_print
 from datetime import datetime
 import secrets
-from flask_sqlalchemy import SQLAlchemy
+from homeserver.apis import db
 debug_print(__file__)
 
 nBase = 12
-db = SQLAlchemy()
 
 
 def spaces(nBase, prompt):
@@ -41,11 +40,8 @@ class User(db.Model):
 
     @staticmethod
     def verify_reset_token(self, token):
-        try:
-            id = self.query.filter_by(reset_token=token).first()
-        except:
-            return None
-        return self.query.get("id")
+        id = self.query.filter_by(reset_token=token).first()
+        return self.query.get(id)
 
 
 class Role(db.Model):
@@ -59,6 +55,10 @@ class Role(db.Model):
     #   Timestamp, last updated
     updated = db.Column(db.DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow, nullable=False)
+
+    def __init__(self, name, desc):
+        self.name = name
+        self.desc = desc
 
     def __repr__(self):
         fID = f'\n\t{spaces(nBase, "ID")} {self.id}'
@@ -114,7 +114,8 @@ class Manufacturer(db.Model):
     country = db.Column(db.String(24), nullable=True)
     url = db.Column(db.Text, nullable=True)
     boards = db.relationship('Board', backref='manufacturer', lazy=True)
-    components = db.relationship('Component', backref='manufacturer', lazy=True)
+    components = db.relationship('Component', backref='manufacturer',
+                                 lazy=True)
     updated = db.Column(db.DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow, nullable=False)
 
@@ -189,7 +190,6 @@ class Board(db.Model):
         fID = f'\n\t{spaces(nBase, "ID")} {self.id}'
         fDesc = f'\n\t{spaces(nBase, "Desc")} {self.desc}'
         list1 = [self.prime_location, self.location, self.sub_location]
-        print(list1)
         location = '/'.join(filter(None, list1))
         fbLoc = f'\n\t{spaces(nBase, "Location")} {location}\t'
         fActive = 'Yes' if self.active else 'No'
@@ -245,26 +245,6 @@ class Component(db.Model):
             'Component:' + fID + fName + fPur + fMan + fVen + fPrice +
             fPDate + fPin + fTopic + fUsage + fActive + fUpd
         )
-
-
-''' class BoardComponent(db.Model):
-    
-    bc_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    id = db.Column(db.Integer,
-                             db.ForeignKey('component.id'),
-                             nullable=False)
-    active = db.Column(db.Boolean, default=False)
-    updated = db.Column(db.DateTime, nullable=False,
-                        default=datetime.now())
-
-    def __repr__(self):
-        fID = f'\t\tID:\t\t{self.bc_id}'
-        fBoard = f'\t\tBoard id:\t\t{self.board_id}'
-        fActive = f'\t\tActive:\t\t{self.active}'
-        fUpd = f'\t\tUpdated:\t{self.updated.strftime("%m/%d/%Y, %H:%M:%S")}'
-        return('Board Component:' + fID + fBoard + fPin + fTopic + fUsage +
-               fActive + fUpd
-               ) '''
 
 
 class RawData(db.Model):
